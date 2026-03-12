@@ -25,13 +25,26 @@ sudo make install-completions
 ## Usage
 
 ```bash
+# categories
 snip list
+snip list --count                          # show entry count per category
 snip create ocp
+
+# entries within a category
 snip ocp list
 snip ocp show "Login to cluster"
 snip ocp clip "Login to cluster"
 snip ocp find "kubeconfig"
 snip ocp edit
+snip ocp delete "Login to cluster"
+
+# add an entry without opening the editor
+snip add ocp "Get all pods" --snippet "kubectl get pods -A" --lang bash
+snip add ocp "Get all pods" --body "Lists pods" --snippet "kubectl get pods -A"
+echo "kubectl get pods -A" | snip add ocp "Get all pods" --lang bash
+
+# search across all categories
+snip find "kubeconfig"
 ```
 
 ## Storage Format
