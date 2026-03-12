@@ -130,6 +130,23 @@ func FindEntry(entries []Entry, headline string) (Entry, bool) {
 	return Entry{}, false
 }
 
+func SerializeEntries(entries []Entry) string {
+	var b strings.Builder
+	for i, e := range entries {
+		if i > 0 {
+			b.WriteString("\n")
+		}
+		b.WriteString(HeadingPrefix)
+		b.WriteString(e.Headline)
+		b.WriteString("\n")
+		if e.Body != "" {
+			b.WriteString(e.Body)
+			b.WriteString("\n")
+		}
+	}
+	return b.String()
+}
+
 func FindMatches(content string, query string) []string {
 	content = strings.ReplaceAll(content, "\r\n", "\n")
 	scanner := bufio.NewScanner(strings.NewReader(content))

@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+
 const DefaultDir = ".snip"
 const CategoriesDir = "categories"
 
@@ -102,6 +103,31 @@ func CreateCategory(category string) (string, error) {
 		return "", err
 	}
 	return path, nil
+}
+
+func DeleteEntry(category, headline string) error {
+	content, err := ReadCategory(category)
+	if err != nil {
+		return err
+	}
+	entries := ParseCategory(content)
+	newEntries := make([]Entry, 0, len(entries))
+	found := false
+	for _, e := range entries {
+		if strings.EqualFold(e.Headline, headline) {
+			found = true
+			continue
+		}
+		newEntries = append(newEntries, e)
+	}
+	if !found {
+		return ErrEntryNotFound
+	}
+	path, err := CategoryFilePath(category)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, []byte(SerializeEntries(newEntries)), 0o644)
 }
 
 func EnsureDataDir() error {

@@ -37,7 +37,7 @@ func NewRootCmd() *cobra.Command {
 		cmd.Println("  snip list")
 		cmd.Println("  snip create <category>")
 		cmd.Println("  snip find <query>")
-		cmd.Println("  snip <category> [list|show|find|clip|edit]")
+		cmd.Println("  snip <category> [list|show|find|clip|edit|delete]")
 		cmd.Println()
 		cmd.Println("Completion hints:")
 		cmd.Println("  categories show as 'category', actions show as 'action', headlines show as 'headline'")
@@ -77,7 +77,7 @@ func categoryOrActionCompletion(cmd *cobra.Command, args []string, toComplete st
 		return headlineOrActionCompletion(args[0], toComplete)
 	}
 	if len(args) == 2 {
-		if args[1] == "show" || args[1] == "clip" {
+		if args[1] == "show" || args[1] == "clip" || args[1] == "delete" {
 			return headlineMatches(args[0], toComplete)
 		}
 		if args[1] == "find" {

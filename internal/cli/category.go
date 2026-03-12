@@ -10,11 +10,12 @@ import (
 )
 
 var categoryActions = map[string]struct{}{
-	"list": {},
-	"show": {},
-	"find": {},
-	"clip": {},
-	"edit": {},
+	"list":   {},
+	"show":   {},
+	"find":   {},
+	"clip":   {},
+	"edit":   {},
+	"delete": {},
 }
 
 func runCategoryDefault(cmd *cobra.Command, args []string) error {
@@ -62,6 +63,12 @@ func handleCategory(cmd *cobra.Command, args []string) error {
 		return clipEntry(cmd, category, headline)
 	case "edit":
 		return editCategory(cmd, category)
+	case "delete":
+		if len(args) < 3 {
+			return errorf("headline is required")
+		}
+		headline := strings.Join(args[2:], " ")
+		return deleteEntry(cmd, category, headline)
 	default:
 		return errorf("unknown action: %s", action)
 	}
@@ -141,6 +148,20 @@ func clipEntry(cmd *cobra.Command, category string, headline string) error {
 	return nil
 }
 
+func deleteEntry(cmd *cobra.Command, category string, headline string) error {
+	if err := snip.DeleteEntry(category, headline); err != nil {
+		if errors.Is(err, snip.ErrEntryNotFound) {
+			return errorf("headline not found: %s", headline)
+		}
+		if errors.Is(err, os.ErrNotExist) {
+			return errorf("category not found: %s", category)
+		}
+		return err
+	}
+	infof(cmd, "deleted %q from %s", headline, category)
+	return nil
+}
+
 func editCategory(cmd *cobra.Command, category string) error {
 	path, err := categoryFilePath(category)
 	if err != nil {
@@ -156,7 +177,7 @@ func editCategory(cmd *cobra.Command, category string) error {
 }
 
 func headlineOrActionCompletion(category string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	actions := []string{"list", "show", "find", "clip", "edit"}
+	actions := []string{"list", "show", "find", "clip", "edit", "delete"}
 	var choices []string
 	for _, action := range actions {
 		if strings.HasPrefix(action, toComplete) {
