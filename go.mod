@@ -1,6 +1,6 @@
 module snip
 
-go 1.24.13
+go 1.24
 
 require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
