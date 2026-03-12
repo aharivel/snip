@@ -105,6 +105,25 @@ func CreateCategory(category string) (string, error) {
 	return path, nil
 }
 
+func AddEntry(category string, entry Entry) error {
+	content, err := ReadCategory(category)
+	if err != nil {
+		return err
+	}
+	entries := ParseCategory(content)
+	for _, e := range entries {
+		if strings.EqualFold(e.Headline, entry.Headline) {
+			return ErrEntryExists
+		}
+	}
+	entries = append(entries, entry)
+	path, err := CategoryFilePath(category)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, []byte(SerializeEntries(entries)), 0o644)
+}
+
 func DeleteEntry(category, headline string) error {
 	content, err := ReadCategory(category)
 	if err != nil {

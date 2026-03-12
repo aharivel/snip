@@ -26,6 +26,7 @@ func NewRootCmd() *cobra.Command {
 	rootCmd.AddCommand(NewListCmd())
 	rootCmd.AddCommand(NewCreateCmd())
 	rootCmd.AddCommand(NewFindCmd())
+	rootCmd.AddCommand(NewAddCmd())
 	rootCmd.CompletionOptions.DisableDefaultCmd = false
 	rootCmd.ValidArgsFunction = categoryOrActionCompletion
 
@@ -37,6 +38,7 @@ func NewRootCmd() *cobra.Command {
 		cmd.Println("  snip list")
 		cmd.Println("  snip create <category>")
 		cmd.Println("  snip find <query>")
+		cmd.Println("  snip add <category> <headline> [--snippet <text>] [--body <text>] [--lang <lang>]")
 		cmd.Println("  snip <category> [list|show|find|clip|edit|delete]")
 		cmd.Println()
 		cmd.Println("Completion hints:")
