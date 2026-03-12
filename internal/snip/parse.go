@@ -123,7 +123,7 @@ func HeadlineList(entries []Entry) []string {
 
 func FindEntry(entries []Entry, headline string) (Entry, bool) {
 	for _, entry := range entries {
-		if entry.Headline == headline {
+		if strings.EqualFold(entry.Headline, headline) {
 			return entry, true
 		}
 	}
